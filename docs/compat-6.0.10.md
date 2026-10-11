@@ -9,7 +9,7 @@
 | Rootfs | zstd squashfs at offset `16076894`, 52,429 inodes |
 | Kernel | `#5.4.213 SMP PREEMPT Wed Sep 23 10:29:56 CST 2026` (rebuilt), GCC 14.2.0-19 |
 | vermagic | `5.4.213-ui-ipq9574 SMP preempt mod_unload aarch64`, unchanged. No module rebuild. |
-| Baseline | 6.0.9 modules and package list pulled from ATL, 6.0.7 rootfs for configs and units |
+| Baseline | 6.0.9 modules and package list pulled from a 6.0.9 UCG-Fiber gateway, 6.0.7 rootfs for configs and units |
 
 | Tweak | Static (UCG-Fiber image) | Live (UXG-Fiber) |
 |---|---|---|
