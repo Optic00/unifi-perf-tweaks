@@ -1,6 +1,6 @@
 # UniFi OS 6.0.12 Compatibility Verification
 
-**Result: compatible.** Static check of the UCG-Fiber image, and live checks on two UCG-Fiber gateways on 6.0.12, 2026-10-11: one without SSD (10 + 15, read-only SSH) and one production gateway with SSD (08 + 09 + 10 + 15, Network Optimizer status page).
+**Result: compatible.** Static check of the UCG-Fiber image, and live checks on two UCG-Fiber gateways on 6.0.12, 2026-10-11: one without SSD (10 + 15, read-only SSH) and one with SSD (08 + 09 + 10 + 15, Network Optimizer status page).
 
 | | |
 |---|---|
@@ -63,9 +63,9 @@ No firmware component other than the env file and the drop-ins references the `1
 
 ## Live
 
-### UCG-Fiber without SSD, 2026-10-11 (read-only)
+### Gateway A: UCG-Fiber without SSD (read-only)
 
-Gateway on 6.0.12 (kernel banner `Wed Oct 7 17:02:07 CST 2026`, matching the image), booted 2026-10-11 04:05 local. No SSD, so 06 to 09 are not deployed. The Network app runs in PostgreSQL mode. Deployed 10 and 15 are byte-identical to repo HEAD. `udm-boot` `ExecMainStatus=0`. All access between 13:38:08 and 13:38:42 UTC.
+On 6.0.12 (kernel banner matches the image), checked on the first boot after the upgrade. No SSD, so 06 to 09 are not deployed. The Network app runs in PostgreSQL mode. Deployed 10 and 15 are byte-identical to repo HEAD. `udm-boot` `ExecMainStatus=0`.
 
 | Tweak | Live |
 |---|---|
@@ -75,22 +75,22 @@ Gateway on 6.0.12 (kernel banner `Wed Oct 7 17:02:07 CST 2026`, matching the ima
 Script 15 on this boot, against `ustd` 6.0.10:
 
 - **API:** `BEFORE` stock (100/68/109/103), `AFTER` tuned (65/55/85/90), 0 `ERROR` lines. `SDBClient` `run`/`get`/`update` work on the changed `sdb_client.so`.
-- **Write:** SDB `config.fan` read back at 13:38 UTC holds 65/55/85/90.
-- **Reload:** SDB write at 04:06:22, `ufcd` `ActiveEnterTimestamp` 04:06:22 after the stop the script issued, `NRestarts=0`. `fan_ctrl_sm` mapped in `ufcd` (4).
+- **Write:** SDB `config.fan` read back hours later holds 65/55/85/90.
+- **Reload:** `ufcd` `ActiveEnterTimestamp` is the same second as the script's SDB write, after the stop the script issued. `NRestarts=0`. `fan_ctrl_sm` mapped in `ufcd` (4).
 - **Actuator:** CPU 57.1 °C (tuned 65), rtl8372 78 °C (tuned 85), rtl8261 60 °C (tuned 90). Every component is below its tuned setpoint, so pwm 38 / ~1,845 rpm (3 samples) is the correct floor under both tuned and stock config. This observation cannot tell them apart. The gateway was not perturbed.
 
-### UCG-Fiber with SSD
+### Gateway B: UCG-Fiber with SSD
 
-Production gateway on 6.0.12, read from the Network Optimizer deployment status page on 2026-10-11 (no SSH session). Network app in PostgreSQL mode.
+On 6.0.12, read from the Network Optimizer deployment status page (no SSH session). Network app in PostgreSQL mode.
 
 | Tweak | Live |
 |---|---|
-| 08 PostgreSQL offload | ✓ Bind mount active from `/dev/md3[/postgresql-14-apps]`, authority marker present, PostgreSQL running, 151M on SSD |
-| 09 PostgreSQL backup | ✓ Active, last backup 2026-10-11 05:30 UTC |
+| 08 PostgreSQL offload | ✓ Bind mount active from `/dev/md3[/postgresql-14-apps]`, authority marker present, PostgreSQL running |
+| 09 PostgreSQL backup | ✓ Active, a daily backup completed on 6.0.12 |
 | 10 journald | ✓ `Storage` volatile, `ForwardToSyslog` disabled, all eMMC log routes disabled, IDS/IPS threat pipeline active |
 | 15 fan | ✓ `ufcd` running, last run OK. **Actuator:** CPU die 69 °C, above the tuned 65 °C and below the stock 100 °C. The fan runs at PWM 68 / 3,081 rpm, above the PWM 38 floor that stock setpoints would hold. The tuned setpoints are driving the fan loop on 6.0.12. |
 
-This closes the actuator link that the gateway without SSD could not show.
+This closes the actuator link that gateway A could not show.
 
 ## Outstanding
 
