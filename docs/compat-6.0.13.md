@@ -33,7 +33,7 @@ Same 362-module set as 6.0.12. All 362 are byte-identical to 6.0.12, including `
 
 10 firmware packages changed version against 6.0.12. None of `python3`, `systemd`, `syslog-ng`, `mongod`, PostgreSQL changed. Notable: `unifi-core` 6.0.125 → 6.0.127, `ulp-go` 1.14.7 → 1.14.8, `uos-discovery-client` 6.0.6 → 6.0.7, new revisions of `udapi-server`/`libudapi`, `libubnt`, `mcagent` and `ustd` (version still 6.0.10). Debian security update: `xz-utils`/`liblzma5` deb13u1 → u2.
 
-The `ustd` rebuild changed one module's code: `sdb_client.so` `.text` 143,176 → 143,036 bytes. That `.text` is byte-identical to the 6.0.11 `sdb_client.so` (`ustd` 6.0.9), so 6.0.13 rolls back the 6.0.12 change. Exported symbols are unchanged, and `SDBClient.run`, `get` and `update` (the three calls script 15 makes) are present. All other `statusdb` modules are `.text`-identical to 6.0.12.
+The `ustd` rebuild changed one module's code: `sdb_client.so` `.text` 143,176 → 143,036 bytes. That `.text` is byte-identical to the 6.0.11 `sdb_client.so` (`ustd` 6.0.9), so 6.0.13 rolls back the 6.0.12 change. Script 15 ran live against that code on 6.0.11, so the `SDBClient` `run`/`get`/`update` API is intact by construction. All other `statusdb` modules are `.text`-identical to 6.0.12.
 
 `ubnt-device-info` still links to `ubios-udapi-server`, which changed with `udapi-server`. The `model_short` string is present. `ubnthal.ko` is byte-identical.
 
@@ -41,7 +41,6 @@ No package was added or removed. The unit set and `/etc/cron.d` are identical to
 
 ## Outstanding
 
-- Live check on 6.0.13, in particular a script 15 run against the rolled-back `sdb_client.so`.
 - 6.0.12 and earlier compat docs did not check 05.
 
 No new reference `.ko` (byte-identical to `research/qca-ssdk-compare/qca-ssdk-6.0.12.ko`). Working files: `~/fw-6013/` on the NAS.
