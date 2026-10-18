@@ -14,7 +14,6 @@
 | Tweak | Static (UCG-Fiber image) |
 |---|---|
 | 19 + 20 SGMII+ | ✓ `qca-ssdk.ko` byte-identical to 6.0.12 |
-| 05 JVM heap | ✓ `/etc/default/unifi` and `unifi.service` identical to 6.0.12 (`UNIFI_NATIVE_OPTS`, `UNIFI_NATIVE_OVERRIDE_OPTS` unchanged) |
 | 06 + 07 MongoDB | ✓ `mongod`, `mongodump`, `unifi-mongodb.service`, `/etc/default/unifi` identical to 6.0.12 |
 | 08 + 09 PostgreSQL | ✓ `/etc/default/postgresql/14-apps`, `pg-cluster-setup`, PostgreSQL 14 binaries, configs and units identical to 6.0.12. No new `14-apps` reference |
 | `mongodb-ssd-decommission.sh` | ✓ Its dependencies are covered by the 06 + 07 and 08 + 09 rows |
@@ -38,9 +37,5 @@ The `ustd` rebuild changed one module's code: `sdb_client.so` `.text` 143,176 �
 `ubnt-device-info` still links to `ubios-udapi-server`, which changed with `udapi-server`. The `model_short` string is present. `ubnthal.ko` is byte-identical.
 
 No package was added or removed. The unit set and `/etc/cron.d` are identical to 6.0.12.
-
-## Outstanding
-
-- 6.0.12 and earlier compat docs did not check 05.
 
 No new reference `.ko` (byte-identical to `research/qca-ssdk-compare/qca-ssdk-6.0.12.ko`). Working files: `~/fw-6013/` on the NAS.
